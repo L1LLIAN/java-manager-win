@@ -6,7 +6,7 @@ pub fn remove(path: &String, config: &mut Config) -> Result<(), Box<dyn std::err
         None => {
             println!("The path {} is already added!", path);
             Ok(())
-        },
+        }
 
         Some(idx) => {
             config.jvm_paths.remove(idx);

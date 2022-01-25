@@ -1,6 +1,9 @@
-use std::{str::from_utf8_mut, ops::Add};
+use std::str::from_utf8_mut;
 
-use crate::{config::Config, win::{self, set_path_in_reg}};
+use crate::{
+    config::Config,
+    win::{get_path_from_reg, set_java_home_in_reg, set_path_in_reg},
+};
 
 pub fn set(path_idx: usize, config: &mut Config) -> Result<(), Box<dyn std::error::Error>> {
     let paths = &config.jvm_paths;
@@ -9,7 +12,7 @@ pub fn set(path_idx: usize, config: &mut Config) -> Result<(), Box<dyn std::erro
         return Ok(());
     }
 
-    let mut win_path = win::get_path_from_reg();
+    let mut win_path = get_path_from_reg();
     win_path.resize(win_path.len() - 1, 0);
     let win_path = from_utf8_mut(&mut win_path)?;
     let mut win_path = win_path.to_string();
@@ -26,10 +29,9 @@ pub fn set(path_idx: usize, config: &mut Config) -> Result<(), Box<dyn std::erro
     config.current_path = Some(path.to_string());
     confy::store("jvm-manager", &config)?;
 
-    let mut new_path = win_path + path + "\\bin;";
-    println!("new_path = {}", new_path);
-    set_path_in_reg(&mut new_path);
+    set_path_in_reg(win_path + path + "\\bin;");
+    set_java_home_in_reg(path.to_string());
 
-    println!("Set current path to {}!", path);
+    println!("Set current java install to {}!", path);
     Ok(())
 }
