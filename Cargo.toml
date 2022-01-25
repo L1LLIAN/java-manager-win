@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-winapi = { version = "0.3", features = ["winreg"] }
 serde = { version = "1.0.135", features = ["derive"] }
 confy = "0.4.0"
 clap = { version = "3.0.12", features = ["derive"] }
+directories = "4.0"

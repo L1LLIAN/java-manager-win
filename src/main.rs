@@ -1,7 +1,6 @@
 mod args;
 mod cmd;
 mod config;
-mod win;
 
 use clap::StructOpt;
 use cmd::set;
