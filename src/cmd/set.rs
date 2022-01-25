@@ -19,7 +19,6 @@ pub fn set(path_idx: usize, config: &mut Config) -> Result<(), Box<dyn std::erro
     let user_dirs = directories::UserDirs::new().unwrap();
     let home = user_dirs.home_dir();
     let jdk_path = home.join(".jdk");
-    println!("jdk_path = {:?}", jdk_path);
 
     if jdk_path.exists() && jdk_path.is_symlink() {
         fs::remove_dir(&jdk_path)?;
