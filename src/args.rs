@@ -17,5 +17,10 @@ pub enum Commands {
     /// Add a jvm path
     Add {
         path: String
+    },
+
+    /// Remove a jvm path
+    Remove {
+        path: String
     }
 }

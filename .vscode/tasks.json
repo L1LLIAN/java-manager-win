@@ -26,5 +26,18 @@
 			"group": "build",
 			"label": "run add cmd"
 		},
+		{
+			"type": "cargo",
+			"command": "run",
+			"args": [
+				"remove",
+				"D:\\jdk-17.0.1+12\\"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "run remove cmd"
+		},
 	]
 }
