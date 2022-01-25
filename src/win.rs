@@ -1,4 +1,4 @@
-use std::{ffi::CString, ptr::null_mut};
+use std::{ffi::CString, ptr::null_mut, str::from_utf8};
 use winapi::{
     shared::minwindef::HKEY,
     um::{
@@ -45,12 +45,58 @@ pub fn get_path_from_reg() -> Vec<u8> {
 
         if get_status != 0 {
             RegCloseKey(hkey);
-            panic!("get_status non zero");
+            panic!("get_status non-zero");
         }
 
         RegCloseKey(hkey);
 
         path_vec.resize(size as usize, 0);
         return path_vec;
+    }
+}
+
+pub fn set_path_in_reg(path: &mut String) {
+    unsafe {
+        let mut hkey: HKEY = null_mut();
+        let environment_str = CString::new("Environment").unwrap();
+
+        let open_status = RegOpenKeyExA(
+            HKEY_CURRENT_USER,
+            environment_str.as_ptr(),
+            0,
+            KEY_ALL_ACCESS,
+            &mut hkey,
+        );
+
+        // 0 = pog
+        // 87 = access denied
+        // 2 = no exist
+        if open_status != 0 {
+            RegCloseKey(hkey);
+            panic!("open_status non-zero");
+        }
+
+        let mut path_vec: Vec<u8> = path.as_bytes_mut().to_vec();
+        path_vec.resize(path_vec.len() + 1, 0);
+        println!("path_vec as str = {:?}", from_utf8(&path_vec));
+
+        let size = path_vec.len();
+
+        let path_str = CString::new("Path").unwrap();
+        let set_status = RegSetValueExA(
+            hkey,
+            path_str.as_ptr(),
+            0,
+            REG_SZ,
+            path_vec.as_ptr(),
+            size as u32
+        );
+
+        if set_status != 0 {
+            RegCloseKey(hkey);
+            panic!("set_status non-zero");
+        }
+
+        RegCloseKey(hkey);
     }
 }

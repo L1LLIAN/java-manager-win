@@ -6,7 +6,7 @@ use clap::{Parser, Subcommand};
 pub struct Args {
     /// Name of the person to greet
     #[clap(subcommand)]
-    pub command: Commands,
+    pub command: Option<Commands>,
 }
 
 #[derive(Subcommand, Debug)]
@@ -15,12 +15,11 @@ pub enum Commands {
     List,
 
     /// Add a jvm path
-    Add {
-        path: String
-    },
+    Add { path: String },
 
     /// Remove a jvm path
-    Remove {
-        path: String
-    }
+    Remove { path: String },
+
+    /// Set a current jvm path (0 indexed)
+    Set { path: usize },
 }

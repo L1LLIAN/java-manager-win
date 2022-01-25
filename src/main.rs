@@ -4,6 +4,7 @@ mod config;
 mod win;
 
 use clap::StructOpt;
+use cmd::set;
 
 use crate::{
     args::{Args, Commands},
@@ -17,8 +18,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let args = Args::parse();
     match &args.command {
-        Commands::List => list(config),
-        Commands::Add { path } => add(path, &mut config),
-        Commands::Remove { path } => remove(path, &mut config),
+        Some(x) => match x {
+            Commands::List => list(config),
+            Commands::Add { path } => add(path, &mut config),
+            Commands::Remove { path } => remove(path, &mut config),
+            Commands::Set { path } => set(*path, &mut config),
+        },
+
+        None => {
+            println!("Current path = {:?}", config.current_path);
+            Ok(())
+        }
     }
 }

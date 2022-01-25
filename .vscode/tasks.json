@@ -18,7 +18,7 @@
 			"command": "run",
 			"args": [
 				"add",
-				"D:\\jdk-17.0.1+12\\"
+				"D:\\jdk8u312-b07"
 			],
 			"problemMatcher": [
 				"$rustc"
@@ -31,13 +31,26 @@
 			"command": "run",
 			"args": [
 				"remove",
-				"D:\\jdk-17.0.1+12\\"
+				"D:\\jdk8u312-b07"
 			],
 			"problemMatcher": [
 				"$rustc"
 			],
 			"group": "build",
 			"label": "run remove cmd"
+		},
+		{
+			"type": "cargo",
+			"command": "run",
+			"args": [
+				"set",
+				"0"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "run set cmd"
 		},
 	]
 }
