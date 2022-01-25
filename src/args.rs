@@ -13,4 +13,9 @@ pub struct Args {
 pub enum Commands {
     /// List added jvm paths
     List,
+
+    /// Add a jvm path
+    Add {
+        path: String
+    }
 }

@@ -2,35 +2,57 @@ mod args;
 mod config;
 mod win;
 
-use std::str::from_utf8_mut;
-
 use clap::StructOpt;
 
 use crate::{
     args::{Args, Commands},
     config::Config,
-    win::get_path_from_reg,
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config: Config = confy::load("jvm-manager")?;
-    confy::store("jvm-manager", &config)?;
+    let mut config: Config = confy::load("jvm-manager")?;
     println!("config = {:?}", &config);
 
     let args = Args::parse();
     match &args.command {
-        Commands::List => {
-            list()?
-        }
+        Commands::List => list(config)?,
+        Commands::Add { path } => add(path, &mut config)?,
     }
 
     Ok(())
 }
 
-fn list() -> Result<(), Box<dyn std::error::Error>> {
-    let mut path_vec = get_path_from_reg();
-    let path_str = from_utf8_mut(&mut path_vec)?;
-    println!("path_str = {}", path_str);
+fn list(config: Config) -> Result<(), Box<dyn std::error::Error>> {
+    let paths = config.jvm_paths;
+    if paths.len() == 0 {
+        println!("You have no paths added!");
+    } else {
+        println!(
+            "You have {} path{} added:",
+            paths.len(),
+            if paths.len() == 1 { "" } else { "s" }
+        );
+        for path in paths {
+            println!(" - {}", path);
+        }
+    }
+    Ok(())
+}
 
+fn add(path: &String, config: &mut Config) -> Result<(), Box<dyn std::error::Error>> {
+    let mut final_path = path.clone();
+    if !final_path.ends_with('\\') {
+        final_path.push('\\');
+    }
+
+    if config.jvm_paths.contains(&final_path) {
+        println!("The path {} is already added!", path);
+        return Ok(());
+    }
+
+    config.jvm_paths.push(final_path);
+    println!("Added path {}!", path);
+
+    confy::store("jvm-manager", config)?;
     Ok(())
 }
